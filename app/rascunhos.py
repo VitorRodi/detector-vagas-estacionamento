@@ -131,6 +131,12 @@ def _validate(draft):
                  and _number(minimum) and 0 < minimum <= 1,
                  f'{location}: brightness_threshold ou min_region_ratio fora dos limites')
     _require(_json_value(draft), 'todos os campos devem conter apenas valores JSON finitos e chaves de texto')
+    # Escapes JSON podem decodificar substitutos Unicode isolados, mesmo
+    # quando o arquivo lido está em UTF-8. O mapa precisa poder ser regravado.
+    try:
+        json.dumps(draft, ensure_ascii=False, allow_nan=False).encode('utf-8')
+    except UnicodeError as error:
+        raise ValueError('Rascunho inválido para JSON UTF-8: texto Unicode inválido.') from error
 
 
 def _unique_object(pairs):
@@ -157,9 +163,7 @@ class DraftStore:
         """Valida e substitui o ativo somente depois de gravar e sincronizar."""
         try:
             _validate(draft)
-            # Confere UTF-8 e serialização antes de tocar no diretório.
-            json.dumps(draft, ensure_ascii=False, allow_nan=False).encode('utf-8')
-        except (TypeError, OverflowError, RecursionError, UnicodeError) as error:
+        except (TypeError, OverflowError, RecursionError) as error:
             raise ValueError(f'Rascunho inválido para JSON UTF-8: {error}') from error
         temporary = None
         try:
