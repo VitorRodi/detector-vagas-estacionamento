@@ -1,86 +1,175 @@
-# Roteiro da apresentação
+# Roteiro pronto para gravar
 
-Duração planejada: 8 minutos e 40 segundos. Reservar 1 minuto e 20 segundos de margem até o limite de dez minutos. Todos os quatro integrantes devem falar com a própria voz e demonstrar que compreendem o projeto.
+Tempo planejado: **8 minutos e 40 segundos**, com margem de 1 minuto e 20 segundos até o limite de dez minutos. Os tempos são referências de ensaio: uma parte mais curta pode encerrar antes. Todos os quatro integrantes devem falar com a própria voz e compreender sua parte.
 
-Este é um roteiro para ensaio, não um relato de coleta já realizada. Atualizem os trechos sobre local, usuários, observação e resultados com evidências reais antes da gravação final. Se demonstrarem a simulação, identifiquem-na expressamente. A gravação deve mostrar o programa em execução; slides podem servir apenas de apoio.
+Este roteiro usa a demonstração atual: aplicativo nativo, editor no próprio painel e relatório HTML. A filmagem é de terceiros, com fonte documentada em [FONTES_MIDIA.md](FONTES_MIDIA.md). A coleta própria e a avaliação independente continuam pendentes. Se o grupo realizou investigação de campo depois desta versão, substituir a explicação do contexto pelos fatos realmente registrados.
 
-## Divisão do tempo
+## Divisão das quatro partes
 
-| Tempo | Integrante | Conteúdo e tela |
+| Tempo aproximado | Integrante | Conteúdo | Tela principal |
+|---|---|---|---|
+| 0:00–1:30 | Vitor Rodi | Integrantes, problema, contexto e objetivo | Capa curta e aplicativo com o estacionamento pausado |
+| 1:30–3:10 | Pedro Toigo | Solução, tecnologias, método e contribuição | Marcações, detector.py e app/duplicacao.py |
+| 3:10–5:55 | Edson Leandro Soares | Demonstração prática e contribuição | Reprodução, contadores, filtro, histórico, van e editor |
+| 5:55–7:10 | Bruno Fell Antunes | Relatório funcionando | Comando de geração, HTML, gráfico e eventos |
+| 7:10–8:40 | Bruno Fell Antunes | Resultados, dificuldades, limites e conclusão | Avaliação, GitHub Actions e repositório |
+
+A divisão reserva menos de dois minutos ao problema e à solução, quatro minutos à demonstração e cerca de um minuto e meio aos resultados e à conclusão. A fala deve acompanhar as ações na tela, em linguagem natural.
+
+## Preparação antes de gravar
+
+1. Usar a mesma versão da main nos quatro trechos. Instalar as dependências e ensaiar o aplicativo no computador da gravação.
+2. Preparar uma capa de até cinco segundos, dentro do tempo do Vitor: título, disciplina, Unochapecó, professor Wagner Titon e nomes completos dos quatro integrantes.
+3. Preparar resultados, aplicativo e relatório, na raiz do projeto:
+
+```powershell
+.\.venv\Scripts\python.exe executar_exemplo.py --completo
+.\.venv\Scripts\python.exe aplicativo.py --usar-resultados
+.\.venv\Scripts\python.exe gerar_relatorio.py --resultados resultados/carpark --saida resultados/carpark/relatorio.html
+```
+
+4. Abrir resultados/carpark/relatorio.html no navegador e deixar os arquivos citados e o repositório prontos para alternar.
+5. Gravar em orientação horizontal, com microfone testado e texto legível. A captura principal mostra o programa funcionando; uma câmera pequena com o rosto é opcional. A participação verbal dos quatro é obrigatória.
+6. Fechar notificações e telas pessoais. Podem gravar quatro clipes e juntar na ordem da tabela, ou usar o mesmo computador com a narração de cada integrante.
+7. Ensaiar os cliques do Edson. Para abreviar uma espera de processamento, mostrar o início e o resultado da execução e usar a legenda **“Processamento do vídeo — espera abreviada”**. O corte não representa velocidade medida do algoritmo.
+
+## 1. Vitor — problema e apresentação, 0:00–1:30
+
+**Na tela:** capa por até cinco segundos; depois aplicativo em Monitoramento, com o estacionamento pausado e as regiões visíveis. Colocar uma legenda pequena: “Gravação de terceiros — fonte documentada no repositório”.
+
+**Fala sugerida:**
+
+> Olá, professor. Nosso grupo é formado por Vitor Rodi, Pedro Toigo, Bruno Fell Antunes e Edson Leandro Soares. Este é nosso projeto de Robótica e Visão Computacional: o monitoramento de vagas de estacionamento.
+>
+> O problema que escolhemos abordar é a dificuldade de visualizar onde existem vagas disponíveis. Em um estacionamento, o motorista pode precisar percorrer os corredores para encontrar um espaço, enquanto quem administra o local também precisa de uma visão da ocupação.
+>
+> Delimitamos a proposta a partir da análise desse cenário: usar uma imagem com câmera fixa, cadastrar as regiões das vagas e apresentar a disponibilidade de forma centralizada.
+>
+> Para desenvolver e demonstrar o protótipo, usamos esta gravação de terceiros, cuja fonte está registrada no repositório. A demonstração permite acompanhar o comportamento do programa; a coleta própria e a avaliação em outros estacionamentos são etapas que ainda precisam ser realizadas.
+>
+> Nosso objetivo é indicar quais regiões estão livres, ocupadas ou precisam de análise. Agora o Pedro vai explicar como a solução foi construída.
+
+Se houve observação ou entrevista realmente feita pelo grupo, inserir local, situação observada e como isso ajudou a definir o problema. Este roteiro não pressupõe pesquisa no campus nem redução de tempo já medida.
+
+## 2. Pedro — solução e método, 1:30–3:10
+
+**Na tela:** aplicativo com as regiões cadastradas; trecho de [detector.py](../detector.py), na função Detector.process; depois cerca de dez segundos de [app/duplicacao.py](../app/duplicacao.py), em duplicate_spaces. Destacar trechos legíveis, sem rolar o arquivo inteiro. Pode usar um esquema: imagem → textura por região → confirmação temporal → estado e contagem.
+
+**Fala sugerida:**
+
+> A solução usa Python, OpenCV e NumPy para processar as imagens. A interface é uma janela nativa feita com PySide6, baseada em Qt.
+>
+> Primeiro cadastramos as regiões das vagas na imagem. O programa transforma cada quadro em tons de cinza, suaviza a imagem e aplica limiarização adaptativa, filtro de mediana e dilatação. Depois mede a proporção de textura dentro de cada região.
+>
+> Usamos dois limiares para decidir entre livre e ocupada. No vídeo, uma nova classificação precisa se repetir por cinco quadros antes de ser confirmada. Isso reduz mudanças provocadas por variações muito rápidas.
+>
+> Esse método não usa uma rede neural treinada e não reconhece semanticamente um carro. O percentual mostrado é um índice de textura, não uma probabilidade de ocupação.
+>
+> Uma dificuldade foi que muitos carros continuam parados até o final da gravação. Por isso, o último quadro não poderia servir como fundo vazio para todas as vagas. O modo completo usa textura; o experimento anterior por referência vazia também foi preservado.
+>
+> Na minha contribuição, implementei o serviço de duplicação de vagas, com novos identificadores e validação dos limites da imagem. Também revisei a recuperação de rascunhos para salvar perfis. A duplicação está pronta como serviço e sua ligação aos controles do painel é uma etapa posterior. O Edson vai mostrar o aplicativo funcionando.
+
+## 3. Edson — demonstração prática, 3:10–5:55
+
+**Sequência de ações para ensaiar:**
+
+| Momento aproximado do trecho | Ação | Explicação |
 |---|---|---|
-| 0:00 a 1:30 | Vitor Rodi | Integrantes, problema, local e investigação |
-| 1:30 a 3:00 | Pedro Toigo | Solução, tecnologias e método |
-| 3:00 a 5:00 | Bruno Fell Antunes | Referência, cadastro e primeira execução |
-| 5:00 a 7:00 | Edson Leandro Soares | Entrada e saída, contagem e exportações |
-| 7:00 a 7:25 | Vitor Rodi | Resultados medidos e relação com o problema |
-| 7:25 a 7:50 | Pedro Toigo | Dificuldades técnicas |
-| 7:50 a 8:15 | Bruno Fell Antunes | Limitações e melhorias |
-| 8:15 a 8:40 | Edson Leandro Soares | Conclusão e links de entrega |
+| Primeiros 15 s | Mostrar a análise pronta no quadro 60; se mostrar Reprocessar, abreviar apenas a espera com a legenda indicada | 71 regiões: 69 vagas e duas áreas de revisão; 12 livres, 57 ocupadas e 2 em análise |
+| Próximos 30 s | Reproduzir o clipe até o fim | Contagem acompanha os estados; final com 15 livres, 54 ocupadas e 2 em análise |
+| Próximos 25 s | Pausar, aplicar Somente livres, selecionar V01 e voltar a um evento V03 pelo histórico | Correspondência entre lista, região e quadro da confirmação |
+| Próximos 15 s | Selecionar V70 ou V71 e mostrar a van central | Amarelo é análise, fora da disponibilidade |
+| Próximos 45 s | Vídeos e vagas → Demonstração · criar uma cópia; nomear o ensaio; escolher Mover / ajustar; selecionar V69, ajustar um canto e Desfazer; usar Conferir neste quadro | Cadastro no mesmo painel, geometria manual e conferência pontual |
+| Próximos 20 s | Salvar e analisar, abreviando a espera se preciso; depois Demonstração na lateral | Perfil separado e retorno à análise original |
+| Restante | Mostrar brevemente app/rascunhos.py ou sua documentação e passar a fala ao Bruno | Contribuição de persistência e integração futura |
 
-## Vitor Rodi apresenta o problema
+A fala acompanha os cliques. A cópia do mapa usa a mesma filmagem: isso não é uma nova coleta. Adicionar vídeo permite escolher outra gravação e cadastrar seu próprio mapa.
 
-Começar com: “Nosso grupo é formado por Vitor Rodi, Pedro Toigo, Bruno Fell Antunes e Edson Leandro Soares. Desenvolvemos um protótipo para indicar a ocupação de vagas de estacionamento usando imagens de uma câmera fixa.”
+**Fala sugerida:**
 
-Explicar que a busca depende da visualização das vagas e pode exigir percorrer corredores. Identificar o estacionamento efetivamente observado, quem o utiliza e como o grupo investigou o problema. Relatar apenas o que a observação ou entrevista permitiu concluir. Não afirmar redução de tempo, economia ou melhoria de trânsito sem medição.
+> Aqui temos o aplicativo em execução. A demonstração acompanha 71 regiões: 69 vagas cadastradas e duas áreas centrais de revisão. Neste quadro, o detector indica 12 regiões livres, 57 ocupadas e duas em análise.
+>
+> Vou reproduzir a gravação. Os retângulos e os contadores acompanham os resultados calculados para cada quadro. Ao final, temos 15 livres, 54 ocupadas e duas em análise.
+>
+> Podemos filtrar as vagas livres, selecionar uma região e voltar a uma alteração pelo histórico. O histórico mostra o quadro em que o classificador confirmou a mudança, que pode diferir do instante da saída física completa do veículo.
+>
+> Nesta área central, a van atravessa duas regiões. As duas ficam amarelas e o detalhe explica o motivo da análise conjunta. Amarelo não significa vaga disponível.
+>
+> Para cadastrar um estacionamento, usamos Vídeos e vagas. Vou demonstrar com uma cópia deste mapa: seleciono uma região, ajusto seu canto, desfaço a alteração e confiro a classificação do quadro. Também é possível desenhar retângulos ou marcar quatro pontos. Ao salvar, o programa cria um perfil separado e analisa o mapa escolhido.
+>
+> Minha contribuição inclui o serviço de rascunhos, com validação, gravação atômica e recuperação dos dados, além dos testes de integração da duplicação com o detector. A recuperação automática ao reabrir o painel ainda precisa ser conectada à interface. Agora o Bruno vai mostrar o relatório dos resultados.
 
-Mostrar uma foto autorizada do contexto e o objetivo do projeto. Transição: “O Pedro vai explicar como transformamos essa necessidade em um processamento de imagens.”
+**Conferir durante o ensaio:**
 
-## Pedro Toigo explica a solução
+- O clipe incluído mostra saídas de V01, V02 e V03. Para demonstrar uma entrada de carro estacionando, usar uma simulação identificada ou uma coleta própria que contenha essa situação.
+- O filtro altera a lista; os contadores continuam cobrindo o mapa inteiro.
+- Azul no editor indica cadastro. As cores de classificação aparecem ao conferir o quadro.
+- Persistência de rascunhos e duplicação foram entregues como serviços; seus novos controles ainda precisam ser conectados ao painel. O rascunho atual do editor permanece durante a sessão.
+- Voltar à demonstração original antes da parte do Bruno: o relatório e a avaliação usarão os resultados com rótulos conferidos. Um novo perfil não herda essa avaliação.
 
-Mostrar brevemente `detector.py` e o diagrama verbal: câmera fixa → tons de cinza e suavização → limiarização adaptativa → mediana e dilatação → densidade de textura por vaga → confirmação temporal → contagem e registro.
+## 4. Bruno — relatório, resultados e conclusão, 5:55–8:40
 
-Fala central: “Usamos Python, OpenCV e NumPy, com PySide6 para a janela nativa. Não treinamos uma rede neural. Cadastramos manualmente 71 regiões e medimos textura em cada região. O valor não é uma probabilidade de haver um carro. O modo anterior por referência vazia também permanece disponível.”
+**Na tela, nesta ordem:**
 
-Explicar os dois limiares e os cinco quadros de confirmação. Explicar por que não se usa o último quadro como fundo vazio global: muitos carros continuam estacionados. A textura permite analisar esses carros parados, com limitações. Explicar que alterações de sombra também podem causar erro. Transição: “Agora vamos executar o programa e acompanhar o que acontece em cada vaga.”
-
-## Bruno Fell Antunes inicia a demonstração
-
-Mostrar vagas_completas_carpark.json e como os quatro cantos delimitam cada vaga. Identificar os seis setores e as exclusões de ilhas e corredores. Mostrar V69 acima da V59 e a revisão conjunta de V70/V71 sob a van. Usar uma cópia da configuração caso se demonstre a ferramenta de cadastro manual.
-
-Abrir `INICIAR_APLICATIVO.bat`, aguardar a análise e mostrar a janela Vaga com 12 estados livres, 57 ocupados e dois em análise. Mostrar Reprocessar, que executa novamente o detector, e o botão Reproduzir. Explicar o significado de verde, vermelho e amarelo. Demonstrar que a contagem acompanha os estados e que uma alteração fora de uma região não deveria mudar aquela vaga.
-
-Para ensaiar com dados simulados:
-
-```powershell
-.\.venv\Scripts\python.exe demo.py
-.\.venv\Scripts\python.exe detector.py --source dados/cena_simulada.png --reference dados/referencia_vazia.png --config dados/vagas_demo.json --output resultados/imagem --show
-```
-
-O exemplo real já cadastrado abre em uma janela nativa com `.\.venv\Scripts\python.exe aplicativo.py`. O comando `executar_exemplo.py --completo --show` continua disponível para demonstrar o detector diretamente. Ele monitora 71 regiões do vídeo de terceiros; explicar a origem, o mapa e os limiares conforme `MAPA_COMPLETO.md`. A imagem do quadro 678 não é um fundo vazio das 71 regiões. Na interface Vaga, usar Reproduzir/Pausar e a barra de posição para explicar as saídas. O botão Apresentar abre tela cheia; Esc retorna à janela. Veja [APLICATIVO.md](APLICATIVO.md) para o percurso de ensaio. Para uma gravação própria, seguir `COLETA_REAL.md`. Mostrar o comando completo e pelo menos um trecho do processamento. A demonstração deve usar o mesmo código publicado no GitHub.
-
-## Edson Leandro Soares continua a demonstração
-
-Durante o trecho de cadastro, mostrar brevemente **Vídeos e vagas** no próprio painel. Explicar Adicionar vídeo, retângulo ou quatro pontos, Mover / ajustar e Salvar e analisar. Pode usar **Demonstração · criar uma cópia** para ilustrar o editor sem alterar o mapa original. Se usar outro vídeo, identificar sua origem e explicar que as vagas são cadastradas manualmente e os limiares precisam ser conferidos. Não atribuir a ele a precisão medida no exemplo incluído. Retornar por Voltar ou Monitoramento, na mesma janela, mantendo esse trecho dentro do tempo reservado à demonstração.
-
-Na gravação externa, mostrar as saídas de V01, V02 e V03, confirmadas nos quadros 118, 172 e 370. Essa gravação não contém entradas de veículos estacionando; para demonstrar uma entrada, usar a simulação identificada ou a coleta própria. Destacar os cinco quadros de confirmação e explicar que liberação parcial de uma vaga pode ser indicada antes da saída física completa. Mostrar um veículo parado mantendo o estado ocupado. Se a coleta tiver falhas com sombras, mostrar um exemplo e explicar a limitação.
-
-Na janela Vaga, selecionar uma vaga, aplicar Somente livres e voltar a uma mudança pelo histórico. Usar Exportar resultados, extrair o ZIP, abrir `ocupacao.csv` e explicar quadro, tempo estimado, vaga, estado e densidade de textura. Abrir o vídeo exportado. Não apresentar o FPS do arquivo como velocidade medida do algoritmo.
-
-Para ensaio reproduzível:
+1. Executar o comando e mostrar a confirmação de gravação:
 
 ```powershell
-.\.venv\Scripts\python.exe detector.py --source dados/video_simulado.mp4 --reference dados/referencia_vazia.png --config dados/vagas_demo.json --output resultados/video
-.\.venv\Scripts\python.exe verificar_demo.py
+.\.venv\Scripts\python.exe gerar_relatorio.py --resultados resultados/carpark --saida resultados/carpark/relatorio.html
 ```
 
-O vídeo simulado tem somente 12 segundos. O período de demonstração inclui a execução, o cadastro, a explicação dos estados e as exportações; não é necessário esticar ou repetir a reprodução para preencher quatro minutos.
+2. Abrir o HTML no navegador. Mostrar contagem final, gráfico de evolução e tabela de mudanças de estado. O HTML é um relatório exportado; a interface principal continua sendo o aplicativo nativo.
+3. A partir de cerca de 7:10, mostrar a seção de avaliação: 197 amostras, concordância e cobertura.
+4. Mostrar brevemente uma execução aprovada no GitHub Actions e o histórico de contribuições. Isso comprova testes de software e participação, sem substituir a demonstração prática.
+5. Encerrar com o repositório e os nomes do grupo.
 
-## Os quatro apresentam os resultados e encerram
+**Fala sugerida:**
 
-Vitor: relatar os resultados reais medidos e retomar o objetivo de apresentar disponibilidade. Se houver apenas simulação, dizer que o funcionamento foi verificado em cenário controlado e que a efetividade no local ainda não foi demonstrada.
+> Minha contribuição foi o gerador de relatório HTML. Ele usa os arquivos de ocupação, eventos e resumo, além da avaliação quando ela existe. O relatório funciona sem internet e reúne os resultados em um único arquivo.
+>
+> Vou executar o comando e abrir a saída. Aqui aparecem as contagens finais, a evolução ao longo da gravação e as mudanças de estado. As confirmações iniciais ficam separadas das alterações posteriores. As regiões em análise não são contadas como vagas disponíveis.
+>
+> O gerador também confere se os dados estão completos e coerentes antes de criar o relatório. Para um vídeo sem rótulos de avaliação, ele informa Sem avaliação rotulada, em vez de atribuir uma precisão que não foi medida.
+>
+> Na amostra desta demonstração, temos 197 pares de quadro e região: 185 concordantes, nove indefinidos e três divergentes. Isso representa 93,91% de concordância total e 95,43% de cobertura.
+>
+> Esses números descrevem somente a amostra deste vídeo, que também foi usado para ajustar o mapa e os parâmetros. Eles não representam uma precisão garantida em outros estacionamentos ou em todos os quadros do clipe.
+>
+> As principais limitações são sombras, passagem de pessoas, veículos com superfícies lisas e mudanças de iluminação ou enquadramento. No próprio exemplo, a região V55 apresenta falsas mudanças durante passagem de pessoas e sombras. A câmera precisa ficar fixa e cada novo local exige cadastro e conferência.
+>
+> A versão apresentada também passou por 115 testes automatizados em Windows e Linux. Esses testes verificam o comportamento do software; a validação da visão em campo exige outras gravações e rótulos independentes.
+>
+> Como próximos passos, queremos realizar uma coleta própria, avaliar outras condições e conectar os serviços de duplicação e recuperação de rascunhos aos controles do editor.
+>
+> Concluímos que o protótipo permite acompanhar estados de vagas e consultar os resultados de uma gravação de forma organizada. O código, as dependências e as instruções estão neste repositório público. Obrigado.
 
-Pedro: explicar uma dificuldade técnica efetivamente observada, como alinhamento da câmera, limiares ou oscilação entre quadros. Evitar relatar problemas que o grupo não verificou.
+## Números para as legendas
 
-Bruno: comentar veículos lisos, pedestres, sombras, oclusão e mudança de iluminação. Mostrar os erros de V55 registrados no histórico. Como melhorias, propor calibração por condição de luz, avaliação com mais sequências ou comparação com um classificador treinado. Identificar propostas como trabalho futuro.
+| Medida | Valor na demonstração |
+|---|---:|
+| Quadros processados | 679 |
+| Duração estimada da fonte | 28,29 s |
+| Regiões | 71: 69 vagas e 2 áreas de revisão |
+| Decisões de estado | 48.209 |
+| Quadro 60: livres / ocupadas / análise | 12 / 57 / 2 |
+| Último quadro: livres / ocupadas / análise | 15 / 54 / 2 |
+| Amostras rotuladas | 197 |
+| Concordantes / indefinidas / divergentes | 185 / 9 / 3 |
+| Concordância total / cobertura | 93,91% / 95,43% |
+| Testes automatizados de software nesta versão | 115 |
 
-Edson: concluir o que foi demonstrado e mostrar o repositório público. Informar que a reprodução está descrita no README e encerrar antes de dez minutos. Não inventar endereço do YouTube antes de publicar.
+A matriz detalhada e os limites estão em [MAPA_COMPLETO.md](MAPA_COMPLETO.md). O FPS informado pelo vídeo não mede a velocidade do algoritmo; a duração da fonte também não é o tempo de execução.
 
-## Conferência antes de gravar
+## Tela final e entrega
 
-- Ensaiar o percurso com os quatro integrantes e cronometrar.
-- Testar microfones, volume e captura da tela; deixar a janela do aplicativo e qualquer texto do terminal legíveis.
-- Fechar abas pessoais e notificações antes da captura.
-- Mostrar entradas, programa e saídas em vez de apresentar exclusivamente slides.
-- Gravar as próprias falas. Cada integrante deve conseguir explicar o trecho apresentado e responder perguntas.
-- Publicar no YouTube como público ou não listado; vídeo privado não atende ao enunciado.
-- Testar os links sem login e preencher `ENTREGA.md`.
+Texto sugerido para a tela final:
+
+```text
+Monitoramento de vagas de estacionamento
+Vitor Rodi · Pedro Toigo · Bruno Fell Antunes · Edson Leandro Soares
+Unochapecó — Robótica e Visão Computacional — Wagner Titon
+GitHub: github.com/VitorRodi/detector-vagas-estacionamento
+```
+
+Depois de editar, conferir duração abaixo de dez minutos, voz audível dos quatro, texto legível, programa funcionando e origem da filmagem identificada. Slides são apoio à demonstração. As afirmações devem corresponder aos dados realmente observados e à versão gravada.
+
+Publicar no YouTube como público ou não listado. Depois, preencher o link verdadeiro no README e em [ENTREGA.md](ENTREGA.md). Testar YouTube e GitHub em janela sem login antes de entregar os dois endereços ao professor.
